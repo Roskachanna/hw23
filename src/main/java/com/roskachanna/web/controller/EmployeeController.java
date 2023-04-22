@@ -33,4 +33,5 @@ public class EmployeeController {
     public List<Employee> detAllEmployees() {
         return employeeService.getAllEmployees();
     }
+
 }
