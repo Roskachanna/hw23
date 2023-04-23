@@ -7,13 +7,16 @@ import com.roskachanna.web.model.Employee;
 import com.roskachanna.web.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final Employee[] employees;
+    private final List<Employee> employees;
 
     public EmployeeServiceImpl() {
-        employees = new Employee[5];
+        employees = new ArrayList<>();
     }
 
     @Override
@@ -23,42 +26,35 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeAlreadyAddedException();
         }
         employee = new Employee(firstName, lastName);
-        for (int i = 0; i < employees.length; i++) {
-            if(employees[i] == null) {
-                employees[i] =employee;
-                return employee;
-            }
-        }
-        throw new EmployeeStorageIsFullException();
+        employees.add(employee);
+        return employee;
     }
 
     @Override
     public Employee remoweEmployee(String firstName, String lastName) {
         Employee employee = findEmployee(firstName, lastName);
-        if(employee == null) {
+        if(!employees.contains(employee)) {
             throw new EmployeeNotFoundException();
         }
-        for (int i = 0; i < employees.length; i++) {
-            if(employees[i] != null && employees[i].equals(employee)){
-                employees[i] = null;
-            }
-        }
+        employees.remove(employee);
+
         return employee;
     }
 
     @Override
     public Employee findEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null && employees[i].equals(employee)) {
-                return employees[i];
+        Employee findEmployee = new Employee(firstName, lastName);
+
+        for (Employee employee : employees) {
+            if (employee.equals(findEmployee)) {
+                return employee;
             }
-        };
+        }
         return null;
     }
 
     @Override
-    public Employee[] getAllEmployees() {
+    public List<Employee> getAllEmployees() {
         return employees;
     }
 
