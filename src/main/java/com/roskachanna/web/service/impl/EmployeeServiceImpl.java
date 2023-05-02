@@ -2,7 +2,6 @@ package com.roskachanna.web.service.impl;
 
 import com.roskachanna.web.exception.EmployeeAlreadyAddedException;
 import com.roskachanna.web.exception.EmployeeNotFoundException;
-import com.roskachanna.web.exception.EmployeeStorageIsFullException;
 import com.roskachanna.web.model.Employee;
 import com.roskachanna.web.service.EmployeeService;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee addEmployee(String firstName, String lastName) {
-        Employee employee = findEmployee(firstName, lastName);
+    public Employee addEmployee(String firstName, String lastName, int salary, int department) {
+        Employee employee = findEmployee(firstName, lastName, salary, department);
         if(employees.containsKey(employee.getFullName())) {
             throw new EmployeeAlreadyAddedException();
         }
@@ -36,11 +35,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee findEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
+    public Employee findEmployee(String firstname, String lastName) {
+        return null;
+    }
 
-        if (employees.containsKey(employee.getFullName())) {
-            return employee;
+    @Override
+    public Employee findEmployee(String firstName, String lastName, int salary, int department) {
+        String key = firstName + lastName;
+
+        if (employees.containsKey(key)) {
+            return employees.get(key);
         }else {
             throw new EmployeeNotFoundException();
         }
