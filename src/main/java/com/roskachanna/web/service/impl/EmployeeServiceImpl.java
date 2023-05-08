@@ -2,11 +2,15 @@ package com.roskachanna.web.service.impl;
 
 import com.roskachanna.web.exception.EmployeeAlreadyAddedException;
 import com.roskachanna.web.exception.EmployeeNotFoundException;
+import com.roskachanna.web.exception.InvalidInputException;
 import com.roskachanna.web.model.Employee;
 import com.roskachanna.web.service.EmployeeService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -19,6 +23,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(String firstName, String lastName, int salary, int department) {
+        validateInput(firstName,lastName);
+
         Employee employee = findEmployee(firstName, lastName, salary, department);
         if(employees.containsKey(employee.getFullName())) {
             throw new EmployeeAlreadyAddedException();
@@ -29,18 +35,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee remoweEmployee(String firstName, String lastName) {
+        validateInput(firstName,lastName);
+
         Employee employee = findEmployee(firstName, lastName);
         employees.remove(employee.getFullName());
         return employee;
     }
 
     @Override
-    public Employee findEmployee(String firstname, String lastName) {
+    public Employee findEmployee(String firstName, String lastName) {
         return null;
     }
 
     @Override
     public Employee findEmployee(String firstName, String lastName, int salary, int department) {
+        validateInput(firstName,lastName);
+
         String key = firstName + lastName;
 
         if (employees.containsKey(key)) {
@@ -58,5 +68,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
         return null;
+    }
+
+    private void validateInput(String firstName, String lastName) {
+        if (!(isEmpty(firstName)&& isEmpty(lastName))) {
+            throw new InvalidInputException();
+        }
     }
 }
