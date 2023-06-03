@@ -6,7 +6,6 @@ import com.roskachanna.web.exception.InvalidInputException;
 import com.roskachanna.web.model.Employee;
 import com.roskachanna.web.service.EmployeeService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -16,14 +15,16 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final Map<String, Employee> employees;
+    private int department;
 
     public EmployeeServiceImpl() {
         employees = new HashMap<>();
     }
 
     @Override
-    public Employee addEmployee(String firstName, String lastName, int salary, int department) {
+    public Employee addEmployee(String firstName, String lastName, int salary) {
         validateInput(firstName,lastName);
+
 
         Employee employee = findEmployee(firstName, lastName, salary, department);
         if(employees.containsKey(employee.getFullName())) {
